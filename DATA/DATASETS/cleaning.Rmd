@@ -1,0 +1,74 @@
+---
+title: "Cleaning"
+author: "Lucía Guillén López"
+date: "2026-05-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(readxl)
+library(dplyr)
+library(stringr)
+library(stringi)
+library(lubridate)
+library(forcats)
+library(tidyverse)
+library(scales)
+
+
+df <- read_excel("dataset_final.xlsx")
+```
+
+## Eliminar todos los articulos (filas) de menos de 20 palabras en el cuerpo o 5 en el titulo
+
+```{r cars}
+# Guardamos el número inicial de filas
+n_inicial <- nrow(df)
+
+df_clean <- df %>%
+  
+  # 1. Eliminar filas sin título o sin texto
+  drop_na(titulo, texto) %>%
+  
+  # 2. Normalizar texto:
+  #    - pasar a UTF-8
+  #    - quitar espacios dobles o espacios al principio/final
+  mutate(
+    titulo = str_squish(stri_enc_toutf8(titulo)),
+    texto  = str_squish(stri_enc_toutf8(texto))
+  ) %>%
+  
+  # 3. Recalcular número de palabras
+  mutate(
+    n_palabras_titulo = str_count(titulo, "\\S+"),
+    n_palabras_texto  = str_count(texto, "\\S+")
+  ) %>%
+  
+  # 5. Crear una columna con título + texto
+  mutate(
+    full_text = paste(titulo, texto, sep = " ")
+  )
+
+# Comprobación de filas eliminadas
+n_final <- nrow(df_clean)
+
+cat("Filas originales:", n_inicial, "\n")
+cat("Filas después de eliminar vacios:", n_final, "\n")
+cat("Filas eliminadas:", n_inicial - n_final, "\n")
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+df_final <- df_clean %>%
+  # Eliminar artículos demasiado cortos
+  filter(
+    n_palabras_titulo >= 5,
+    n_palabras_texto >= 20
+  )
+n_finnn <- nrow(df_final)
+cat("Filas después de eliminar artículos cortos:", n_finnn, "\n")
+cat("Filas eliminadas:", n_final - n_finnn, "\n")
+```

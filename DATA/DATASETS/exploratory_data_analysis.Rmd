@@ -1,0 +1,299 @@
+---
+title: "Exploratory Data Analysis (proyiii dataset)"
+author: "Lucía Guillén López"
+date: "2026-05-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(lubridate)
+library(forcats)
+library(tidyr)
+library(scales)
+
+df <- read_excel("dataset_inmigracion_scraped.xlsx")
+ia <- read_excel("dataset_inmigracion_synthetic.xlsx")
+
+ia <- ia %>%
+  mutate(medio = "sintetico")
+
+df <- bind_rows(df, ia)
+
+df <- df %>%
+  mutate(
+    etiqueta = recode(etiqueta, "ALERTA" = "VERDADERO"),
+    fecha_publicacion = ymd_hms(fecha_publicacion),
+    year = year(fecha_publicacion),
+    month = floor_date(fecha_publicacion, "month"),
+    titulo = str_squish(as.character(titulo)),
+    texto = str_squish(as.character(texto)),
+    n_palabras_titulo = str_count(titulo, boundary("word")),
+    n_palabras_texto = str_count(texto, boundary("word")),
+    n_caracteres_texto = nchar(texto)
+  )
+
+
+df <- df %>%
+  mutate(
+    medio = str_squish(str_to_lower(medio)),
+    medio = if_else(str_detect(medio, "^tag"), "maldita migración", medio)
+  )
+```
+
+```{r}
+non_article_check <- df %>%
+  mutate(
+    non_article = str_detect(
+      texto,
+      regex(
+        paste(
+          "Todas las noticias sobre",
+          "Últimas noticias",
+          "Noticias de última hora",
+          "Consulta las últimas noticias",
+          "Toda la actualidad",
+          "Información y noticias",
+          "publicadas en EL PAÍS",
+          sep = "|"
+        ),
+        ignore_case = TRUE
+      )
+    )
+  )
+
+non_article_check %>%
+  count(non_article)
+
+df <- non_article_check %>%
+  filter(non_article == FALSE) %>%
+  select(-non_article)
+```
+
+```{r}
+df <- df %>%
+  mutate(
+    tecnica = replace_na(as.character(tecnica), "ninguna"),
+    modificacion = replace_na(as.character(modificacion), "ninguna")
+  )
+```
+
+
+
+## Plot 1: topic by media
+
+```{r pressure, echo=FALSE}
+media_topic <- df %>%
+  count(medio, tema) %>%
+  group_by(medio) %>%
+  mutate(prop = n / sum(n)) %>%
+  ungroup()
+
+ggplot(media_topic, aes(x = fct_reorder(tema, prop, .fun = max), 
+                        y = fct_reorder(medio, prop, .fun = max), 
+                        fill = prop)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = n), size = 3) +
+  scale_fill_gradient(labels = percent_format(), low = "white", high = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Topic distribution by media outlet",
+    x = "Topic",
+    y = "Media outlet",
+    fill = "Proportion",
+    caption = "Numbers inside cells represent article counts."
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Plot 2: label by media 
+
+```{r pressure, echo=FALSE}
+media_label <- df %>%
+  count(medio, etiqueta) %>%
+  group_by(medio) %>%
+  mutate(prop = n / sum(n)) %>%
+  ungroup()
+
+ggplot(media_label, aes(x = fct_reorder(medio, prop, .fun = max), 
+                        y = prop, 
+                        fill = etiqueta)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent_format()) +
+  coord_flip() +
+  labs(
+    title = "Label distribution by media",
+    x = "Media outlet",
+    y = "Proportion of articles",
+    fill = "Label"
+  ) +
+  theme_minimal()
+```
+
+
+## Plot 3: label by topic
+```{r}
+
+topic_label <- df %>%
+  count(tema, etiqueta) %>%
+  group_by(tema) %>%
+  mutate(prop = n / sum(n)) %>%
+  ungroup()
+
+ggplot(topic_label, aes(x = fct_reorder(tema, prop, .fun = max), 
+                        y = prop, 
+                        fill = etiqueta)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent_format()) +
+  coord_flip() +
+  labs(
+    title = "Label distribution by topic",
+    x = "Topic",
+    y = "Proportion of articles",
+    fill = "Label"
+  ) +
+  theme_minimal()
+```
+```{r}
+ggplot(df, aes(x = etiqueta, y = n_palabras_texto, fill = etiqueta)) +
+  geom_boxplot(outlier.alpha = 0.2) +
+  scale_y_log10() +
+  labs(
+    title = "Text length distribution by label",
+    x = "Label",
+    y = "Number of words in article text, log scale"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+```{r}
+ggplot(df, aes(x = etiqueta, y = n_palabras_titulo, fill = etiqueta)) +
+  geom_boxplot(outlier.alpha = 0.2) +
+  labs(
+    title = "Title length distribution by label",
+    x = "Label",
+    y = "Number of words in title"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+```{r}
+
+```
+
+
+```{r}
+df <- df %>%
+  mutate(
+    year = if_else(medio == "sintetico", 2026L, as.integer(year))
+  )
+
+year_media <- df %>%
+  filter(!is.na(year), year >= 2000, year <= 2026) %>%
+  count(year, medio)
+
+ggplot(year_media, aes(x = year, y = n, color = medio)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 1.5) +
+  scale_x_continuous(
+    limits = c(2017, 2026),
+    breaks = seq(2017, 2026, by = 2)
+  ) +
+  labs(
+    title = "Temporal distribution of articles by media outlet",
+    x = "Publication year",
+    y = "Number of articles",
+    color = "Media outlet"
+  ) +
+  theme_minimal()
+```
+
+
+```{r}
+ggplot(df, aes(x = n_palabras_titulo, 
+               y = n_palabras_texto, 
+               color = etiqueta)) +
+  geom_point(alpha = 0.4) +
+  scale_y_log10() +
+  labs(
+    title = "Relationship between title length and article length",
+    x = "Number of words in title",
+    y = "Number of words in text, log scale",
+    color = "Label"
+  ) +
+  theme_minimal()
+```
+```{r}
+install.packages("tidytext")
+library(tidytext)
+
+stopwords_es <- tibble(
+  word = c(
+    "de", "la", "el", "en", "y", "a", "los", "las", "un", "una",
+    "que", "por", "con", "del", "al", "se", "no", "es", "para",
+    "su", "sus", "sobre", "como", "más", "ha", "han", "lo"
+  )
+)
+
+title_words <- df %>%
+  select(etiqueta, titulo) %>%
+  unnest_tokens(word, titulo) %>%
+  filter(str_detect(word, "^[a-záéíóúñü]+$")) %>%
+  anti_join(stopwords_es, by = "word") %>%
+  count(etiqueta, word, sort = TRUE) %>%
+  group_by(etiqueta) %>%
+  slice_max(n, n = 15) %>%
+  ungroup()
+
+ggplot(title_words, aes(x = reorder_within(word, n, etiqueta), 
+                        y = n, 
+                        fill = etiqueta)) +
+  geom_col(show.legend = FALSE) +
+  scale_x_reordered() +
+  coord_flip() +
+  facet_wrap(~ etiqueta, scales = "free") +
+  labs(
+    title = "Most frequent title words by label",
+    x = "Word",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+resumen_tecnicas_ia <- ia %>%
+  mutate(
+    tecnica = replace_na(as.character(tecnica), "ninguna"),
+    tecnica = str_squish(str_to_lower(tecnica))
+  ) %>%
+  count(tecnica, sort = TRUE) %>%
+  mutate(
+    porcentaje = n / sum(n) * 100
+  )
+
+resumen_tecnicas_ia
+```
+```{r}
+head(dataset_inmigracion_unificado_limpio_tema)
+final_dataset %>%
+  count(etiqueta)
+```
+
+
+```{r}
+library(writexl)
+
+write_xlsx(df, "dataset_final.xlsx")
+```
+
