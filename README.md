@@ -40,7 +40,7 @@ Two transformer-based models were evaluated: BETO (Spanish-only) and XLM-ROBERTa
 *   **Machine Learning**: Hugging Face Transformers, PyTorch
 *   **Vector Database**: ChromaDB 
 *   **APIs**: Gemini API, Groq API (Llama 3.3 and 3.1)
-*   **Deployment**: Telegram API, Gradio 
+*   **Deployment**: Telegram API 
 
 ## Documentation
 
