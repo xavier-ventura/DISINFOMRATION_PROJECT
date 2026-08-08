@@ -1,0 +1,62 @@
+[
+  {
+    "titulo": "El CEU de Valencia utilizó cadáveres donados de forma irregular",
+    "etiqueta": "VERDADERO",
+    "texto": "Al menos cinco cuerpos usados para prácticas de Medicina contaban solo con la firma de una enfermera o un amigo, en contra de las normas autonómica y universitaria",
+    "tema": "inmigracion",
+    "url": "https://elpais.com/sociedad/2026-05-02/el-ceu-de-valencia-utilizo-cadaveres-donados-de-forma-irregular.html",
+    "fecha_publicacion": "2026-05-02",
+    "medio": "elpais",
+    "fecha_extraccion": "2026-05-04"
+  },
+  {
+    "titulo": "La regularización de inmigrantes divide a los españoles: 38% a favor y 33% en contra",
+    "etiqueta": "VERDADERO",
+    "texto": "Más de la mitad cree que afectará negativamente al acceso a la vivienda y el sistema sanitario. La prioridad nacional es el criterio más popular para la concesión de ayudas públicas",
+    "tema": "inmigracion",
+    "url": "https://elpais.com/espana/2026-05-04/la-regularizacion-de-inmigrantes-divide-a-los-espanoles-38-a-favor-y-33-en-contra.html",
+    "fecha_publicacion": "2026-05-04",
+    "medio": "elpais",
+    "fecha_extraccion": "2026-05-04"
+  },
+  {
+    "titulo": "Una serie única y extraña para un tiempo feroz",
+    "etiqueta": "VERDADERO",
+    "texto": "El problema no son los extranjeros, sino los servicios públicos. Exijamos acción a sus responsables y tengamos empatía",
+    "tema": "inmigracion",
+    "url": "https://elpais.com/opinion/2026-05-02/una-serie-unica-y-extrana-para-un-tiempo-feroz.html",
+    "fecha_publicacion": "2026-05-02",
+    "medio": "elpais",
+    "fecha_extraccion": "2026-05-04"
+  },
+  {
+    "titulo": "Azcón estrena Gobierno en Aragón de PP y Vox y pide a sus consejeros ser “discretos y prudentes”",
+    "etiqueta": "VERDADERO",
+    "texto": "El líder de la extrema derecha en la comunidad, Alejandro Nolasco, será vicepresidente y tendrá las competencias sobre los menores migrantes",
+    "tema": "inmigracion",
+    "url": "https://elpais.com/espana/elecciones-aragon/2026-05-04/azcon-estrena-gobierno-en-aragon-de-pp-y-vox-y-pide-a-sus-consejeros-ser-discretos-y-prudentes-y-rechazar-el-ruido.html",
+    "fecha_publicacion": "2026-05-04",
+    "medio": "elpais",
+    "fecha_extraccion": "2026-05-04"
+  },
+  {
+    "titulo": "El mundo se asoma al precipicio tras dos meses de cierre de Ormuz",
+    "etiqueta": "VERDADERO",
+    "texto": "Sin avances en las negociaciones entre EE UU e Irán, la crisis energética amenaza con descarrilar la economía si el estrecho no reabre en las próximas semanas",
+    "tema": "inmigracion",
+    "url": "https://elpais.com/internacional/2026-05-03/el-mundo-se-asoma-al-precipicio-tras-dos-meses-de-cierre-de-ormuz.html",
+    "fecha_publicacion": "2026-05-03",
+    "medio": "elpais",
+    "fecha_extraccion": "2026-05-04"
+  },
+  {
+    "titulo": "¿Prioridad nacional en la vivienda de protección? Solo el 14% de adjudicaciones en Catalunya son a extranjeros",
+    "etiqueta": "VERDADERO",
+    "texto": "El coche eléctrico, una primera vez que no se olvida",
+    "tema": "inmigracion",
+    "url": "https://www.eldiario.es/catalunya/prioridad-nacional-vivienda-proteccion-14-adjudicaciones-catalunya-son-extranjeros_1_13185363.html",
+    "fecha_publicacion": "2026-05-04",
+    "medio": "eldiario",
+    "fecha_extraccion": "2026-05-04"
+  }
+]
