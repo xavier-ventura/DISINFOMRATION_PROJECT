@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ' *)",
+      "Bash(.venv/Scripts/pip install *)",
+      "Bash(.venv/Scripts/python -c ' *)",
+      "Bash(.venv/Scripts/python ingest_to_chromadb3.py --excel \"datos/dataset_inmigracion_unificado_limpio_tema.xlsx\" --dry-run)",
+      "Bash(.venv/Scripts/python ingest_to_chromadb3.py --excel \"datos/dataset_inmigracion_unificado_limpio_tema.xlsx\" --chroma-dir ./chroma_db_v3 --dry-run)",
+      "Bash(.venv/Scripts/pip show *)",
+      "Bash(mkdir -p docs notebooks noticias_rag)",
+      "Bash(mv \"M2_Informe_Detector_Bulos_Inmigracion.docx\" docs/)",
+      "Bash(mv \"entrenar_modelo.ipynb\" notebooks/)",
+      "Bash(.venv/Scripts/python -c \"import clasificador_lnr; print\\('OK'\\)\")",
+      "Bash(.venv/Scripts/python -c \"import evaluar_chatbot; print\\('OK'\\)\")",
+      "Bash(.venv/Scripts/python evaluar_chatbot.py --api-key AIzaSyCfDQAes_3R8w0I5Y5BotT6b42SBS3XQkw --solo-curado --verbose)",
+      "Bash(cd /c)",
+      "Bash(python3)",
+      "Bash(find \"c:\\\\Users\\\\Javier Caballero\\\\Desktop\\\\PROYECTO EXIST\\\\EXIST 2026 Dataset V0.2\\\\evaluation\\\\\" -type f -name \"*.py\" -o -name \"*.json\" | head -50)"
+    ]
+  }
+}
