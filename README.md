@@ -1,6 +1,6 @@
 # Misinformation Detector for Immigration News in Spanish Digital Media
 
-This repository contains the code and resources for the Misinformation Detector, a project focused on detecting and explaining misinformation about migration in Spanish political news. The system is deployed as a functional Telegram chatbot called FakeNewsBot, as well as a Gradio web interface.
+This repository contains the code and resources for the Misinformation Detector, a project focused on detecting and explaining misinformation about migration in Spanish political news. The system is deployed as a functional Telegram chatbot called FakeNewsBot.
 
 For full details, please refer to the project documentation: OTHERS/Report_G1.pdf.
 
